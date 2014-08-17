@@ -18,7 +18,7 @@ activity$date <- as.Date(activity$date)
 ```
 
 Histogram of Steps Per Day
-```{r}
+```{r Histogram of Steps Per Day}
 hist(tapply(activity$steps, activity$date, sum), col = "green", 
      main = "Histogram of Steps Per Day", xlab = "Steps Per Day")
 ```
@@ -32,7 +32,7 @@ median(tapply(activity$steps, activity$date, sum), na.rm=TRUE)
 
 Average Daily Activity Pattern, 
 Time Series Plot of Daily Activity Pattern
-```{r}
+```{r Daily Activity Pattern}
 library(ggplot2)
 ggplot(aes(x = interval, y = steps), data = activity) + geom_line(stat = 'summary', fun.y = mean, na.rm = TRUE)
 
@@ -56,10 +56,12 @@ library(plyr)
 library(Hmisc)
 activity2 <- ddply(activity, "interval", mutate, imputed.value = impute(steps, mean))
 activity2 <- activity2[order(activity2$date, activity2$interval),]
+#imputed value converted to a numeric value
+activity2$imputed.value <- as.numeric(activity2$imputed.value)
 ```
 
-Histogram of Steps Per Day with modified data
-```{r}
+Histogram of Steps Per Day With Imputed Data
+```{r Histograms of Setps Per Day with Imputed Data}
 hist(tapply(activity2$imputed.value, activity2$date, sum), col = "green", 
      main = "Histogram of Steps Per Day", xlab = "Steps Per Day")
 ```
@@ -86,9 +88,10 @@ activity2$IsWeekend <- as.factor(activity2$IsWeekend)
 levels(activity2$IsWeekend) <- c("Weekday", "Weekend")
 ```
 
-```{r}
+```{r Weekend vs Weekday Time Series Plot}
 ggplot(aes(x = interval, y = imputed.value), data = activity2) + 
   geom_line(stat = 'summary', fun.y = mean, na.rm = TRUE) +
   ylab("Number of Steps") + xlab ("Interval")+
   facet_wrap(~IsWeekend, nrow = 2)
 ```
+
